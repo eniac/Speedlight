@@ -28,6 +28,7 @@
 #include <assert.h>
 #include <sched.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #include <chrono>
@@ -166,7 +167,7 @@ int main(int argc, char *argv[])
     cout << "Starting startsnap.cpp" << endl;
 
     string if_name = "veth1";
-    int interval_ms = 1000;
+    int interval_ms = 30000;
     int ss_begin = 1;
     int ss_end = 2;
 
@@ -269,10 +270,14 @@ int main(int argc, char *argv[])
     /*
      * Set up timestamps for accurate sending.
      */
+    time_t t = time(NULL);
+    struct tm lt = {0};
+    localtime_r(&t, &lt);
+    long long utc_offset = lt.tm_gmtoff * 1000;
+
     auto interval = chrono::milliseconds(interval_ms);
     auto target_time = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-    // FIXME: need a better way to do this.  Currently breaks with time zones, DST
-    target_time -= milliseconds((target_time.count()-14400000) % 86400000);
+    target_time -= milliseconds((target_time.count() + utc_offset) % 86400000);
 
     target_time += hours(target_hours);
     target_time += minutes(target_minutes);

@@ -44,9 +44,9 @@ The following instructions assume 3 windows: (1) switch behavioral model, (2) no
 	# Leave this window open
 	```
 
-3. In a new window, install the match-action rules.
+3. In a new window, install the match-action rules and start listening for notifications.
 	```
-	./install_rules.sh
+	./start_listening.sh <VARIANT>
 	```
 
 4. In a third window, initiate a snapshot.
@@ -61,6 +61,6 @@ The following instructions assume 3 windows: (1) switch behavioral model, (2) no
 	out/startsnap
 	```
 
-### Notes ###
+### Limitations ###
 
-The snapshot initiation assumes EDT.  Please change snapshot_init/startsnap.cpp line 275.
+Note that this BMv2 version can only handle a small number of snapshot packets at a time---the behavioral model simply can't keep up with the pace of packets.  At higher port counts, particularly with channel state notifications, initiation and notification drops occur.  Our Tofino version does not have this limitation.

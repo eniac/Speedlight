@@ -22,6 +22,9 @@ with open(sys.argv[1] + "/config.p4", 'w') as outfile:
     outfile.write("#define NUM_PORTS %d\n" % (numports))
     outfile.write("#define MAX_SNAPSHOTS %d\n" % (max_snapshots))
 
+    outfile.write("#define TWO_X_PORTS %d\n" % (numports * 2))
+    outfile.write("#define TWO_X_PORTS_PLUS_CPU %d\n" % ((numports + 1) * 2))
+
     # PORTS_TBL_SIZE is the total number of ingress or egress counters
     # Must be NUM_PORTS + 1 because its hard to specify register[ingress_port - 1]
     # It's much easier to specify register[ingress_port]
@@ -33,4 +36,4 @@ with open(sys.argv[1] + "/config.p4", 'w') as outfile:
 
     # SSTABLE_SIZE is the number of entries in the snapshot table
     outfile.write("#define SSTABLE_SIZE %d\n" % (max_snapshots * numports))
-    outfile.write("#define DOUBLE_SSTABLE_SIZE %d\n" % (max_snapshots * (numports + 1)))
+    outfile.write("#define DOUBLE_SSTABLE_SIZE %d\n" % (((max_snapshots + 1) * (numports)*2) + 1))

@@ -36,3 +36,9 @@ cd -
 echo "compiling snapshot_init/startsnap.cpp"
 mkdir -p out
 g++ -std=c++11 snapshot_init/startsnap.cpp -o out/startsnap
+pip install dpkt
+
+sudo sysctl -w net.core.wmem_max=16777216
+sudo sysctl -w net.core.rmem_max=16777216
+sudo sysctl -w net.core.wmem_default=16777216
+sudo sysctl -w net.core.rmem_default=16777216

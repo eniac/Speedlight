@@ -57,7 +57,7 @@ table tiUpdateLastSeen {
     actions {
         aiUpdateLastSeen;
     }
-    size : 64;
+    size : TWO_X_PORTS;
 }
 
 action aiUpdateLastSeen(index_val) {

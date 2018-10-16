@@ -107,7 +107,7 @@ table tiSetEffectivePort {
         aiSetEffectivePort;
         aiFakeEffectivePort;
     }
-    size : 32;
+    size : TWO_X_PORTS_PLUS_CPU;
 }
 
 action aiSetEffectivePort(portIndex){
@@ -402,7 +402,7 @@ table tiForwardInitiation {
 }
 
 action aiForwardInitiation(port) {
-    modify_field(standard_metadata.egress_port, port);
+    modify_field(standard_metadata.egress_spec, port);
 }
 
 
