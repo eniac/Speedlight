@@ -26,6 +26,7 @@ For example, `tiCheckRollover` is a table used during ingress, `reUpdateSnapshot
 ### Compiling the dataplane ###
 
 This release has been tested on Ubuntu 16.04 LTS, but should work on Ubuntu 14.04+.
+p4 simluator has a large memory requirement. We used it in 32gb RAM.
 The following instructions assume 3 windows: (1) switch behavioral model, (2) notification listener, and (3) snapshot initiation script.
 
 1. Setup.
@@ -40,12 +41,14 @@ The following instructions assume 3 windows: (1) switch behavioral model, (2) no
 2. Compile and run the Speedlight dataplane.
 	```
 	# <VARIANT>={Pkt, Pkt_W, Pkt_WC}
+	# <NUM_PORTS> = Number of ports in the switch.
 	./start_switch.sh <VARIANT> <NUM_PORTS> <MAX_SNAPSHOT_ID>
 	# Leave this window open
 	```
 
 3. In a new window, install the match-action rules and start listening for notifications.
 	```
+	# <VARIANT>={Pkt, Pkt_W, Pkt_WC}
 	./start_listening.sh <VARIANT>
 	```
 
@@ -54,6 +57,11 @@ The following instructions assume 3 windows: (1) switch behavioral model, (2) no
 	# This will initiate a single snapshot with ID = 1 in a parallel fashion.
 	# Port responsibilities are spread across available cores to increase the 
 	# speed at which we can issue a sequence of snapshot initiations.
+	# <HH>= Hour of snapshot
+	# <MM>= Minute of snapshot
+	# <NUM_PORTS> = Number of ports in the switch. Make sure this number is equal to the one provided to start_switch.sh script.
+	# Example: ./start_snapshot 17 09 10
+	# This will take snapshot for 10 ports at time 5:09 pm.
 	./start_snapshot.sh <HH> <MM> <NUM_PORTS>
 
 	# You can also access the original, more flexible snapshot initiation 
