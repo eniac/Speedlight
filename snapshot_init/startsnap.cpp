@@ -164,7 +164,7 @@ void setupMessages(char** snapshot_id_ptrs, unsigned short** ip_hdr_ptrs,
 
 int main(int argc, char *argv[])
 {
-    cout << "Starting startsnap.cpp" << endl;
+    //cout << "Starting startsnap.cpp" << endl;
 
     string if_name = "veth1";
     int interval_ms = 30000;
@@ -283,7 +283,7 @@ int main(int argc, char *argv[])
     target_time += minutes(target_minutes);
 
     target_time -= interval;
-    cout << "Waiting for " << (target_time - system_clock::now().time_since_epoch()).count()/1000000000 << endl;
+    cout << "startsnap waiting for " << (target_time - system_clock::now().time_since_epoch()).count()/1000000000 << endl;
     while (target_time > system_clock::now().time_since_epoch()) {
         sched_yield();
     }

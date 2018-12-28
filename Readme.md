@@ -40,34 +40,59 @@ The following instructions assume 3 windows: (1) switch behavioral model, (2) no
 
 2. Compile and run the Speedlight dataplane.
 	```
-	# <VARIANT>={Pkt, Pkt_W, Pkt_WC}
-	# <NUM_PORTS> = Number of ports in the switch.
+	# <VARIANT>            {Pkt, Pkt_W, Pkt_WC}
+	# <NUM_PORTS>          Number of ports in the switch.
+	# <MAX_SNAPSHOT_ID>    Highest valid snapshot ID. Without wraparound (*_W),
+	#                      behavior above this value is undefined. With wraparound,
+	#                      this number determines the maximum number of outstanding
+	#                      snapshots.
 	./start_switch.sh <VARIANT> <NUM_PORTS> <MAX_SNAPSHOT_ID>
 	# Leave this window open
 	```
 
 3. In a new window, install the match-action rules and start listening for notifications.
 	```
-	# <VARIANT>={Pkt, Pkt_W, Pkt_WC}
+	# <VARIANT>            {Pkt, Pkt_W, Pkt_WC}. Must match parameter given to
+	#                      start_switch.sh.
 	./start_listening.sh <VARIANT>
+	# Leave this window open.  Notifications will output here.
 	```
 
 4. In a third window, initiate a snapshot.
 	```
+	# <HH>                 Hour of snapshot according to the Unix date command
+	# <MM>                 Minute of snapshot according to the Unix date command
+	# <NUM_PORTS>          Number of ports in the switch. Must match parameter given
+	#                      to start_switch.sh.
 	# This will initiate a single snapshot with ID = 1 in a parallel fashion.
 	# Port responsibilities are spread across available cores to increase the 
 	# speed at which we can issue a sequence of snapshot initiations.
-	# <HH>= Hour of snapshot
-	# <MM>= Minute of snapshot
-	# <NUM_PORTS> = Number of ports in the switch. Make sure this number is equal to the one provided to start_switch.sh script.
 	# Example: ./start_snapshot 17 09 10
 	# This will take snapshot for 10 ports at time 5:09 pm.
 	./start_snapshot.sh <HH> <MM> <NUM_PORTS>
 
 	# You can also access the original, more flexible snapshot initiation 
-	# that is compiled to:
+	# that is compiled to the following program.  This one is required for
+	# subsequent snapshots, etc.
 	out/startsnap
 	```
+
+### Troubleshooting ###
+
+1. If the start_listening.sh output includes the following:
+```
+Invalid table operation (DUPLICATE_ENTRY)
+```
+Please make sure to restart the switch between invocations of start_listening.sh
+
+2. If start_listening.sh prints nonsensical values, ensure that the VARIANT parameters of start_switch.sh and start_listening.sh match.
+
+3. If the start_switch.sh crashes with:
+```
+lt-simple_switch: ../../include/bm/bm_sim/stateful.h:111: bm::Register& bm::RegisterArray::operator[](size_t): Assertion `idx < size()' failed.
+```
+Ensure that you are running start_snapshot.sh with NUM_PORTS <= start_switch.sh's NUM_PORTS
+
 
 ### Limitations ###
 

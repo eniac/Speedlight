@@ -11,8 +11,9 @@ HH=$1
 MM=$2
 NUMPORTS=$3
 
+echo "Current Time is `date +%H:%M`."
 echo "Snapshots will start at ${HH}:${MM}."
-echo "Number of ports: ${NUMPORTS}"
+echo "Initiating on ports 1 - ${NUMPORTS}"
 
 shift 3
 
@@ -25,14 +26,14 @@ NUM_LOW=$((${CORES} - ${NUM_HIGH}))
 PORT=1
 for (( i=0; i < ${NUM_HIGH}; i++)) 
 do
-		echo "high starting ${PORT}, ending inclusive: $((${PORT} + ${STEP}))"
+		#echo "high starting ${PORT}, ending inclusive: $((${PORT} + ${STEP}))"
         sudo out/startsnap -d veth1 ${HH} ${MM} ${PORT} $((${PORT} + ${STEP} + 1)) $@ &
         PORT=$((${PORT} + ${STEP} + 1))
 done
 if [ "$STEP" != 0 ]; then
 	for (( i=0; i < ${NUM_LOW}; i++))
 	do
-			echo "starting: ${PORT}, ending inclusive: $((${PORT} + ${STEP} - 1))" 
+			#echo "starting: ${PORT}, ending inclusive: $((${PORT} + ${STEP} - 1))" 
 	        sudo out/startsnap -d veth1 ${HH} ${MM} ${PORT} $((${PORT} + ${STEP})) $@ &
 	        PORT=$((${PORT} + ${STEP}))
 	done
