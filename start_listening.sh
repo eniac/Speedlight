@@ -6,6 +6,7 @@ if [ -z $1 ]; then
     echo "Usage: ./start_listener.sh variant"
     exit 1
 fi
+echo "Variant: ${1}"
 
 # install rules
 ./third_party/behavioral-model/targets/speedlight_switch/sswitch_CLI --thrift-port 9090 < out/commands.txt

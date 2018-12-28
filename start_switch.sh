@@ -7,6 +7,10 @@ if [ $# -lt 3 ]
     exit
 fi
 
+echo "Variant: ${1}"
+echo "Number of ports: ${2}"
+echo "Max snapshots: ${3}"
+
 echo "setting up veth interfaces"
 
 port_config=""

@@ -11,6 +11,9 @@ HH=$1
 MM=$2
 NUMPORTS=$3
 
+echo "Snapshots will start at ${HH}:${MM}."
+echo "Number of ports: ${NUMPORTS}"
+
 shift 3
 
 CORES=$((`nproc` - 1))
